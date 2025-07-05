@@ -1,103 +1,302 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+
+const companySizeOptions = [
+  { label: '< 50 employees', value: 1 },
+  { label: '50 – 100 employees', value: 2 },
+  { label: '101 – 500 employees', value: 3 },
+  { label: '501 – 1 000 employees', value: 4 },
+  { label: '> 1 000 employees', value: 5 },
+];
+
+const jobTitleOptions = [
+  { label: 'Individual Contributor', value: 1 },
+  { label: 'Manager / Team Lead', value: 2 },
+  { label: 'Director', value: 3 },
+  { label: 'Vice President', value: 4 },
+  { label: 'C-suite (CEO, CTO, etc.)', value: 5 },
+];
+
+const urgencyOptions = [
+  { label: 'No defined timeline', value: 1 },
+  { label: 'Planning in 6–12 months', value: 2 },
+  { label: 'Planning in 3–6 months', value: 3 },
+  { label: 'Planning in 1–3 months', value: 4 },
+  { label: 'Starting within 1 month', value: 5 },
+];
+
+const potentialRevenueOptions = [
+  { label: '< $5 000', value: 1 },
+  { label: '$5 000 – $10 000', value: 2 },
+  { label: '$10 000 – $20 000', value: 3 },
+  { label: '$20 000 – $50 000', value: 4 },
+  { label: '> $50 000', value: 5 },
+];
+
+const leadSourceOptions = [
+  { label: 'Cold Outbound', value: 1 },
+  { label: 'Website Inquiry', value: 2 },
+  { label: 'Network Introduction', value: 3 },
+  { label: 'Referral', value: 4 },
+  { label: 'Existing Client', value: 5 },
+];
+
+function ScoringGuide() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <Card className="h-fit max-h-[600px] overflow-y-auto scrollbar">
+      <CardHeader>
+        <CardTitle>Lead Scoring Guide</CardTitle>
+        <CardDescription>Understanding the scoring weights and criteria</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-4">
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Company Size (Weight: 1x)</h3>
+            <div className="space-y-1 text-sm">
+              {companySizeOptions.map((option, index) => (
+                <div key={option.value} className="flex justify-between">
+                  <span>{option.label}</span>
+                  <span className="font-mono">{option.value} pt</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Job Title (Weight: 1.5x)</h3>
+            <div className="space-y-1 text-sm">
+              {jobTitleOptions.map((option, index) => (
+                <div key={option.value} className="flex justify-between">
+                  <span>{option.label}</span>
+                  <span className="font-mono">{(option.value * 1.5).toFixed(1)} pt</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Urgency (Weight: 2x)</h3>
+            <div className="space-y-1 text-sm">
+              {urgencyOptions.map((option, index) => (
+                <div key={option.value} className="flex justify-between">
+                  <span>{option.label}</span>
+                  <span className="font-mono">{(option.value * 2).toFixed(1)} pt</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Potential Revenue (Weight: 2x)</h3>
+            <div className="space-y-1 text-sm">
+              {potentialRevenueOptions.map((option, index) => (
+                <div key={option.value} className="flex justify-between">
+                  <span>{option.label}</span>
+                  <span className="font-mono">{(option.value * 2).toFixed(1)} pt</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Lead Source (Weight: 1x)</h3>
+            <div className="space-y-1 text-sm">
+              {leadSourceOptions.map((option, index) => (
+                <div key={option.value} className="flex justify-between">
+                  <span>{option.label}</span>
+                  <span className="font-mono">{option.value} pt</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className="border-t pt-4">
+          <h3 className="font-semibold  text-lg mb-2">Score Tiers</h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="flex items-center gap-2">
+                <span className="text-red-500">🔥 Hot</span>
+              </span>
+              <span className="font-mono">{'>'} 25 pts</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="flex items-center gap-2">
+                <span className="text-yellow-500">🌤️ Warm</span>
+              </span>
+              <span className="font-mono">15 - 25 pts</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="flex items-center gap-2">
+                <span className="text-blue-500">🥶 Cold</span>
+              </span>
+              <span className="font-mono">{'<'} 15 pts</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t pt-4">
+          <h3 className="font-semibold text-lg mb-2">Maximum Possible Score</h3>
+          <div className="text-sm space-y-1">
+            <div className="flex justify-between">
+              <span>Company Size (5 × 1)</span>
+              <span className="font-mono">5 pts</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Job Title (5 × 1.5)</span>
+              <span className="font-mono">7.5 pts</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Urgency (5 × 2)</span>
+              <span className="font-mono">10 pts</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Potential Revenue (5 × 2)</span>
+              <span className="font-mono">10 pts</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Lead Source (5 × 1)</span>
+              <span className="font-mono">5 pts</span>
+            </div>
+            <div className="border-t pt-1 flex justify-between font-semibold">
+              <span>Total Maximum</span>
+              <span className="font-mono">37.5 pts</span>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function LeadScoringPage() {
+  const [companySize, setCompanySize] = useState(1);
+  const [jobTitle, setJobTitle] = useState(1);
+  const [urgency, setUrgency] = useState(1);
+  const [potentialRevenue, setPotentialRevenue] = useState(1);
+  const [leadSource, setLeadSource] = useState(1);
+  const [score, setScore] = useState<number | null>(null);
+  const [tier, setTier] = useState<string | null>(null);
+
+  const calculateScore = () => {
+    const total =
+      companySize * 1 +
+      jobTitle * 1.5 +
+      urgency * 2 +
+      potentialRevenue * 2 +
+      leadSource * 1;
+    setScore(total);
+    if (total > 25) setTier('Hot 🔥');
+    else if (total >= 15) setTier('Warm 🌤️');
+    else setTier('Cold 🥶');
+  };
+
+  return (
+    <div className="p-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-2">Lead Scoring Calculator</h1>
+          <p className="text-gray-200">Evaluate your leads with our comprehensive scoring system</p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Form on the left */}
+          <Card className='max-h-[600px] overflow-y-auto'>
+            <CardHeader>
+              <CardTitle>Calculate Lead Score</CardTitle>
+              <CardDescription>Select parameters to calculate your lead score.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="companySize">Company Size</Label>
+                <Select onValueChange={val => setCompanySize(Number(val))} defaultValue="1">
+                  <SelectTrigger id="companySize">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {companySizeOptions.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value.toString()}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="jobTitle">Job Title</Label>
+                <Select onValueChange={val => setJobTitle(Number(val))} defaultValue="1">
+                  <SelectTrigger id="jobTitle">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {jobTitleOptions.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value.toString()}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="urgency">Urgency</Label>
+                <Select onValueChange={val => setUrgency(Number(val))} defaultValue="1">
+                  <SelectTrigger id="urgency">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {urgencyOptions.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value.toString()}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="potentialRevenue">Potential Revenue</Label>
+                <Select onValueChange={val => setPotentialRevenue(Number(val))} defaultValue="1">
+                  <SelectTrigger id="potentialRevenue">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {potentialRevenueOptions.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value.toString()}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="leadSource">Lead Source</Label>
+                <Select onValueChange={val => setLeadSource(Number(val))} defaultValue="1">
+                  <SelectTrigger id="leadSource">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {leadSourceOptions.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value.toString()}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Button onClick={calculateScore} className="w-full">Calculate Score</Button>
+
+              {score !== null && (
+                <div className="mt-4 text-center p-2 rounded-lg">
+                  <p className="text-xl font-semibol">Score: {score.toFixed(1)}</p>
+                  <p className="text-lg">{tier}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Guide on the right */}
+          <ScoringGuide />
+        </div>
+      </div>
     </div>
   );
 }
