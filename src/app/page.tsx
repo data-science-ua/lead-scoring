@@ -46,9 +46,17 @@ const leadSourceOptions = [
   { label: 'Existing Client', value: 5 },
 ];
 
+const geoOptions = [
+    { "label": "East Europe",    "value": 1 },
+    { "label": "MEA",            "value": 2 },
+    { "label": "Central Europe", "value": 3 },
+    { "label": "West Europe",    "value": 4 },
+    { "label": "UK, US",         "value": 5 }
+  ]
+
 function ScoringGuide() {
   return (
-    <Card className="h-fit max-h-[600px] overflow-y-auto scrollbar">
+    <Card className="h-fit max-h-[700px] overflow-y-auto scrollbar">
       <CardHeader>
         <CardTitle>Lead Scoring Guide</CardTitle>
         <CardDescription>Understanding the scoring weights and criteria</CardDescription>
@@ -114,6 +122,18 @@ function ScoringGuide() {
               ))}
             </div>
           </div>
+
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Geo (Weight: 1x)</h3>
+            <div className="space-y-1 text-sm">
+              {geoOptions.map(option => (
+                <div key={option.value} className="flex justify-between">
+                  <span>{option.label}</span>
+                  <span className="font-mono">{option.value} pt</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="border-t pt-4">
@@ -121,21 +141,21 @@ function ScoringGuide() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="flex items-center gap-2">
-                <span className="text-red-500">🔥 Hot</span>
+                <span className="text-red-500">🔥 Tier 1</span>
               </span>
-              <span className="font-mono">{'>'} 25 pts</span>
+              <span className="font-mono">{'>'} 27 pts</span>
             </div>
             <div className="flex justify-between">
               <span className="flex items-center gap-2">
-                <span className="text-yellow-500">🌤️ Warm</span>
+                <span className="text-yellow-500">🌤️ Tier 2</span>
               </span>
-              <span className="font-mono">15 - 25 pts</span>
+              <span className="font-mono">17 - 27 pts</span>
             </div>
             <div className="flex justify-between">
               <span className="flex items-center gap-2">
-                <span className="text-blue-500">🥶 Cold</span>
+                <span className="text-blue-500">🥶 Tier 3</span>
               </span>
-              <span className="font-mono">{'<'} 15 pts</span>
+              <span className="font-mono">{'<'} 17 pts</span>
             </div>
           </div>
         </div>
@@ -144,12 +164,12 @@ function ScoringGuide() {
           <h3 className="font-semibold text-lg mb-2">Maximum Possible Score</h3>
           <div className="text-sm space-y-1">
             <div className="flex justify-between">
-              <span>Company Size (5 × 1)</span>
-              <span className="font-mono">5 pts</span>
+              <span>Company Size (5 × 1.5)</span>
+              <span className="font-mono">7.5 pts</span>
             </div>
             <div className="flex justify-between">
-              <span>Job Title (5 × 1.5)</span>
-              <span className="font-mono">7.5 pts</span>
+              <span>Job Title (5 × 1)</span>
+              <span className="font-mono">5 pts</span>
             </div>
             <div className="flex justify-between">
               <span>Urgency (5 × 2)</span>
@@ -163,9 +183,13 @@ function ScoringGuide() {
               <span>Lead Source (5 × 1)</span>
               <span className="font-mono">5 pts</span>
             </div>
+            <div className="flex justify-between">
+              <span>Geo (5 × 1)</span>
+              <span className="font-mono">5 pts</span>
+            </div>
             <div className="border-t pt-1 flex justify-between font-semibold">
               <span>Total Maximum</span>
-              <span className="font-mono">37.5 pts</span>
+              <span className="font-mono">42.5 pts</span>
             </div>
           </div>
         </div>
@@ -182,6 +206,7 @@ export default function LeadScoringPage() {
   const [leadSource, setLeadSource] = useState(1);
   const [score, setScore] = useState<number | null>(null);
   const [tier, setTier] = useState<string | null>(null);
+  const [geo, setGeo] = useState(1);
 
   const calculateScore = () => {
     const total =
@@ -189,10 +214,12 @@ export default function LeadScoringPage() {
       jobTitle * 1 +
       urgency * 2 +
       potentialRevenue * 2 +
-      leadSource * 1;
+      leadSource * 1 +
+      geo * 1;
+
     setScore(total);
-    if (total > 25) setTier('Tier 1 🔥');
-    else if (total >= 15) setTier('Tier 2 🌤️');
+    if (total > 27) setTier('Tier 1 🔥');
+    else if (total >= 16) setTier('Tier 2 🌤️');
     else setTier('Tier 3 🥶');
   };
 
@@ -206,14 +233,14 @@ export default function LeadScoringPage() {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Form on the left */}
-          <Card className='max-h-[600px] overflow-y-auto'>
+          <Card className='max-h-[700px] overflow-y-auto'>
             <CardHeader>
               <CardTitle>Calculate Lead Score</CardTitle>
               <CardDescription>Select parameters to calculate your lead score.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="companySize">Company Size</Label>
+                <Label className='pb-2' htmlFor="companySize">Company Size</Label>
                 <Select onValueChange={val => setCompanySize(Number(val))} defaultValue="1">
                   <SelectTrigger id="companySize">
                     <SelectValue placeholder="Select" />
@@ -225,9 +252,22 @@ export default function LeadScoringPage() {
                   </SelectContent>
                 </Select>
               </div>
+              <div>
+                <Label className='pb-2' htmlFor="geo">Geo</Label>
+                <Select onValueChange={val => setGeo(Number(val))} defaultValue="1">
+                  <SelectTrigger id="geo">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {geoOptions.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value.toString()}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
               <div>
-                <Label htmlFor="jobTitle">Job Title</Label>
+                <Label className='pb-2' htmlFor="jobTitle">Job Title</Label>
                 <Select onValueChange={val => setJobTitle(Number(val))} defaultValue="1">
                   <SelectTrigger id="jobTitle">
                     <SelectValue placeholder="Select" />
@@ -241,7 +281,7 @@ export default function LeadScoringPage() {
               </div>
 
               <div>
-                <Label htmlFor="urgency">Urgency</Label>
+                <Label className='pb-2' htmlFor="urgency">Urgency</Label>
                 <Select onValueChange={val => setUrgency(Number(val))} defaultValue="1">
                   <SelectTrigger id="urgency">
                     <SelectValue placeholder="Select" />
@@ -255,7 +295,7 @@ export default function LeadScoringPage() {
               </div>
 
               <div>
-                <Label htmlFor="potentialRevenue">Potential Revenue</Label>
+                <Label className='pb-2' htmlFor="potentialRevenue">Potential Revenue</Label>
                 <Select onValueChange={val => setPotentialRevenue(Number(val))} defaultValue="1">
                   <SelectTrigger id="potentialRevenue">
                     <SelectValue placeholder="Select" />
@@ -269,7 +309,7 @@ export default function LeadScoringPage() {
               </div>
 
               <div>
-                <Label htmlFor="leadSource">Lead Source</Label>
+                <Label className='pb-2' htmlFor="leadSource">Lead Source</Label>
                 <Select onValueChange={val => setLeadSource(Number(val))} defaultValue="1">
                   <SelectTrigger id="leadSource">
                     <SelectValue placeholder="Select" />
