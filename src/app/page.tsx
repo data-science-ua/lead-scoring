@@ -56,7 +56,7 @@ function ScoringGuide() {
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div>
-            <h3 className="font-semibold text-lg mb-2">Company Size (Weight: 1x)</h3>
+            <h3 className="font-semibold text-lg mb-2">Company Size (Weight: 1.5x)</h3>
             <div className="space-y-1 text-sm">
               {companySizeOptions.map(option => (
                 <div key={option.value} className="flex justify-between">
@@ -68,7 +68,7 @@ function ScoringGuide() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-2">Job Title (Weight: 1.5x)</h3>
+            <h3 className="font-semibold text-lg mb-2">Job Title (Weight: 1x)</h3>
             <div className="space-y-1 text-sm">
               {jobTitleOptions.map(option => (
                 <div key={option.value} className="flex justify-between">
@@ -185,15 +185,15 @@ export default function LeadScoringPage() {
 
   const calculateScore = () => {
     const total =
-      companySize * 1 +
-      jobTitle * 1.5 +
+      companySize * 1.5 +
+      jobTitle * 1 +
       urgency * 2 +
       potentialRevenue * 2 +
       leadSource * 1;
     setScore(total);
-    if (total > 25) setTier('Hot 🔥');
-    else if (total >= 15) setTier('Warm 🌤️');
-    else setTier('Cold 🥶');
+    if (total > 25) setTier('Tier 1 🔥');
+    else if (total >= 15) setTier('Tier 2 🌤️');
+    else setTier('Tier 3 🥶');
   };
 
   return (
