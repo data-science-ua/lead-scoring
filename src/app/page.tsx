@@ -58,7 +58,7 @@ function ScoringGuide() {
           <div>
             <h3 className="font-semibold text-lg mb-2">Company Size (Weight: 1x)</h3>
             <div className="space-y-1 text-sm">
-              {companySizeOptions.map((option, index) => (
+              {companySizeOptions.map(option => (
                 <div key={option.value} className="flex justify-between">
                   <span>{option.label}</span>
                   <span className="font-mono">{option.value} pt</span>
@@ -70,7 +70,7 @@ function ScoringGuide() {
           <div>
             <h3 className="font-semibold text-lg mb-2">Job Title (Weight: 1.5x)</h3>
             <div className="space-y-1 text-sm">
-              {jobTitleOptions.map((option, index) => (
+              {jobTitleOptions.map(option => (
                 <div key={option.value} className="flex justify-between">
                   <span>{option.label}</span>
                   <span className="font-mono">{(option.value * 1.5).toFixed(1)} pt</span>
@@ -82,7 +82,7 @@ function ScoringGuide() {
           <div>
             <h3 className="font-semibold text-lg mb-2">Urgency (Weight: 2x)</h3>
             <div className="space-y-1 text-sm">
-              {urgencyOptions.map((option, index) => (
+              {urgencyOptions.map(option => (
                 <div key={option.value} className="flex justify-between">
                   <span>{option.label}</span>
                   <span className="font-mono">{(option.value * 2).toFixed(1)} pt</span>
@@ -94,7 +94,7 @@ function ScoringGuide() {
           <div>
             <h3 className="font-semibold text-lg mb-2">Potential Revenue (Weight: 2x)</h3>
             <div className="space-y-1 text-sm">
-              {potentialRevenueOptions.map((option, index) => (
+              {potentialRevenueOptions.map(option => (
                 <div key={option.value} className="flex justify-between">
                   <span>{option.label}</span>
                   <span className="font-mono">{(option.value * 2).toFixed(1)} pt</span>
@@ -106,7 +106,7 @@ function ScoringGuide() {
           <div>
             <h3 className="font-semibold text-lg mb-2">Lead Source (Weight: 1x)</h3>
             <div className="space-y-1 text-sm">
-              {leadSourceOptions.map((option, index) => (
+              {leadSourceOptions.map(option => (
                 <div key={option.value} className="flex justify-between">
                   <span>{option.label}</span>
                   <span className="font-mono">{option.value} pt</span>
